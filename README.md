@@ -23,10 +23,12 @@ Edit these files.
 - launch/publiser_launch.launch
 - launch/ddpg_navi.launch
 
+1. Launch the input_publisher
 ```
 $ roslaunch rl_navigation publiser_launch.launch
 ```
-and
+2. Set 2D Nav Goal on Rviz
+3. Launch navigation system
 ```
 $ roslaunch rl_navigation ddpg_navi.launch
 ```
