@@ -10,62 +10,23 @@ Python version 2.7.
 
 ## Installing
 ```
-git clone 
-```
-or
-```
-git clone https://github.com/openai/gym
-cd gym
-pip install -e .
+$ cd my_workspace
+$ cd src
+$ git clone https://github.com/tsuchiya-i/rl_navigation.git
+$ cd ..
+$ catkin_make
 ```
 
-## Installing OpenCV
-(recommended)
-```
-$ sudo apt-get install python3-opencv
-```
-or
-```
-$ pip3 install opencv-python
-```
+## How to use
+Edit these files.
+- launch/darknet_ros.launch
+- launch/publiser_launch.launch
+- launch/ddpg_navi.launch
 
-## Installing TensorFlow
 ```
-$ pip3 install tensorflow
+$ roslaunch rl_navigation publiser_launch.launch
 ```
-If you want to use a GPU, please check these versions of TensorFlow, CUDA, and NVIDIA-Drivers and install them.([TensorFlow & CUDA](https://www.tensorflow.org/install/source?hl=ja#tested_build_configurations))([CUDA & Driver](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html))
-
-## Installing SS2D
+and
 ```
-$ git clone https://github.com/tsuchiya-i/SS2D.git
-$ cd SS2D
-$ pip3 install -e .
-```
-# Demo
-![demo](https://github.com/tsuchiya-i/SS2D/blob/main/appendix/navigation_sample.gif)
-
-# Note
-#### Error code1:
-```
-ModuleNotFoundError: No module named 'skbuild'
-```
-Then run this command
-```
-pip3 install -U pip
-```
-#### Error code2:
-```
-ModuleNotFoundError: No module named 'tkinter'
-```
-Then run this command
-```
-sudo apt-get install python3-tk
-```
-#### error code3:
-```
-ModuleNotFoundError: No module named 'PIL.ImageTk'
-```
-Then run this command
-```
-sudo apt install python3-pil.imagetk
+$ roslaunch rl_navigation ddpg_navi.launch
 ```
