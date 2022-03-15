@@ -1,0 +1,39 @@
+<launch>
+  
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find rl_navigation)/config/default.rviz"/>  
+
+  <include file="$(find realsense2_camera)/launch/rs_aligned_depth.launch" />
+  <include file="$(find rl_navigation)/launch/darknet_ros.launch" />
+
+  <node name="depthimage_to_laserscan" pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" args="">
+    <!-- change here for your camera depth topic name. Default: "/camera/depth/image_raw" -->
+    <remap from="image" to="/camera/depth/image_rect_raw"/> 
+    <remap from="camera_info" to="/camera/depth/camera_info"/>
+    <!-- default: 1 pixel. Number of pixel rows used to generate laser scan. -->
+    <param name="scan_height"     type="int"    value="1"/> 
+    <!-- default:0.033, 30 FPS . Time between scans. -->
+    <param name="scan_time"       type="double" value="0.033"/> 
+    <!--default:0.45m. Ranges less than this are considered -Inf. -->
+    <param name="range_min"       type="double" value="0.1"/> 
+    <!--default: 10m. Ranges less than this are considered +Inf. -->
+    <param name="range_max"       type="double" value="10.0"/> 
+    <!--default: camera_depth_frame. Frame id of the laser scan. -->
+    <param name="output_frame_id" type="str"    value="camera_depth_frame"/> 
+  </node>
+  
+  <include file="$(find rtabmap_ros)/launch/rtabmap.launch" >
+    <arg name="rtabmap_args" value="--delete_db_on_start"/>
+    <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
+    <arg name="rgb_topic" value="/camera/color/image_raw"/>
+    <arg name="camera_info_topic" value="/camera/color/camera_info"/>
+  </include>
+
+  <node name="input_publisher" pkg="rl_navigation" type="input_publisher.py" output="screen">
+    <!--neural network input. -->
+    <!--default:depth×9, human_depth×9, goal_info×2 (total:20)-->
+    <param name="input_depth_n" value="9"/>
+    <param name="visual_odom" value="True"/>
+    <param name="human_detection" value="True"/> <!--False:depth×9, goal_info×2 (total:11)-->
+    <param name="yolo_camera_info" value="/camera/color/camera_info"/>
+  </node>
+</launch>
