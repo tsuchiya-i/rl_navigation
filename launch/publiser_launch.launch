@@ -36,4 +36,7 @@
     <param name="human_detection" value="True"/> <!--False:depth×9, goal_info×2 (total:11)-->
     <param name="yolo_camera_info" value="/camera/color/camera_info"/>
   </node>
+
+  <include file="$(find ypspur_ros)/launch/ypspur_ros.launch"/>
+
 </launch>
