@@ -15,10 +15,10 @@ import numpy as np
 import math
 
 class input_publisher():
-    def __init__(self, input_depth_n=9, human_detection=True):
-        self.input_depth_n = rospy.get_param("/input_publisher/input_depth_n", input_depth_n)
+    def __init__(self):
+        self.input_depth_n = rospy.get_param("/input_publisher/input_depth_n", 18)
         self.visual_odom = rospy.get_param("/input_publisher/visual_odom", False)
-        self.human_detection = rospy.get_param("/input_publisher/human_detection", True)
+        self.human_detection = rospy.get_param("/input_publisher/human_detection", False)
         self.camera_info = rospy.get_param("/input_publisher/yolo_camera_info", "/camera/color/camera_info")
         self.max_goal_dist = rospy.get_param("/input_publisher/max_goal_dist", 20)
 
