@@ -1,9 +1,8 @@
 <launch>
   <node pkg="rl_navigation" type="controller.py" name="controller" output="screen"/>
-  <include file="$(find ypspur_ros)/launch/ypspur_ros.launch"/>
 
   <node pkg="rl_navigation" type="ddpg_navi.py" name="ddpg_navi" output="screen">
-    <param name="weight_path" value="weight_sample/ddpg_weights_actor.h5f"/>
+    <param name="weight_path" value="trained_weight/ddpg_weights_actor.h5f"/>
     <param name="action_n" value="2"/>
   </node>
 
