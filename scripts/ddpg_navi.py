@@ -3,6 +3,7 @@ import rospy
 import roslib.packages
 import numpy as np
 import os
+import time
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Activation, Flatten, Input, Concatenate
 
@@ -20,6 +21,7 @@ class ddpg_navi():
             self.input_n = self.input_depth_n*2+2
         else:
             self.input_n = self.input_depth_n+2
+        self.observe_data = []
 
     def callback_observe(self,data):
         self.observe_data = np.array(data.data)
@@ -47,6 +49,7 @@ class ddpg_navi():
             weight_path = self.weight_path
         pkg_name = 'rl_navigation'
         weight_path = roslib.packages.get_pkg_dir(pkg_name)+"/weight/"+weight_path
+        print(weight_path)
         if os.path.exists(weight_path+".index"):
             self.actor.load_weights(weight_path)
             print("########################\n"
@@ -61,11 +64,24 @@ class ddpg_navi():
         rospy.init_node('ddpg_navi', anonymous=True)
         rospy.Subscriber("/observe", Float32MultiArray, self.callback_observe)
 
-        self.newral_network(2,20) #output,input
+        self.newral_network() #output,input
         self.load_weight()
 
         publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
         r = rospy.Rate(10) # 5hz
+
+        """
+        for i in range(10):
+            print("Waiting for input.")
+            if len(self.observe_data)==0:
+                time.sleep(1)
+            else:
+                break
+        else:
+            print("Time over.")
+            exit()
+        """
+
 
         while not rospy.is_shutdown():
             action = self.actor.predict(self.observe_data.reshape(1,1,len(self.observe_data)))
