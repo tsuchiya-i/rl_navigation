@@ -34,15 +34,14 @@ class input_publisher():
     def callback_scan(self, data):
         ranges = np.array(data.ranges)
         ranges = np.where(np.isnan(ranges),data.range_min,ranges)
+        ranges = np.where(ranges>self.range_max, self.range_max, ranges)
         interval = int(len(data.ranges)/(self.input_depth_n-1))
         centor = int(len(data.ranges)/2)
-        self.range_max = data.range_max
         for i in range(self.input_depth_n):#np.arrange(data.angle_min,data.angle_max,angle_interval):
             if i < self.input_depth_n/2.0:
-                self.input_data[i] = ranges[centor + interval*i - 1]/data.range_max
+                self.input_data[i] = ranges[centor + interval*i - 1]/self.range_max
             else:
-                self.input_data[i] = ranges[interval * int(i-self.input_depth_n/2.0)]/data.range_max
-
+                self.input_data[i] = ranges[interval * int(i-self.input_depth_n/2.0)]/self.range_max
 
     def callback_odom(self, data):
         odom_x = data.pose.pose.position.x
@@ -92,13 +91,11 @@ class input_publisher():
                                 human_data[i] = self.input_data[i]
             self.input_data[self.input_depth_n:self.input_depth_n*2] = human_data
 
-
     def callback_click(self, data):
         self.goal_point = np.array([data.pose.position.x,data.pose.position.y])
         print("=====publish_goal=====")
         print(list(self.goal_point))
         print("======================")
-
 
     def input_publish(self):
         rospy.init_node('input_publisher', anonymous=True)
