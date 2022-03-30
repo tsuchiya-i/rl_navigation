@@ -38,10 +38,24 @@ class input_publisher():
         interval = int(len(data.ranges)/(self.input_depth_n-1))
         centor = int(len(data.ranges)/2)
         for i in range(self.input_depth_n):#np.arrange(data.angle_min,data.angle_max,angle_interval):
-            if i < self.input_depth_n/2.0:
-                self.input_data[i] = ranges[centor + interval*i - 1]/self.range_max
+            if i == int(self.input_depth_n/2.0):
+                if ranges[centor + interval*i - 1] == data.range_min:
+                    range_ = ranges[-20]
+                else:
+                    range_ = ranges[centor + interval*i - 1]
+            elif i < self.input_depth_n/2.0:
+                if ranges[centor + interval*i - 1] == data.range_min:
+                    range_ = ranges[centor + interval*i - 2]
+                else:
+                    range_ = ranges[centor + interval*i - 1]
             else:
-                self.input_data[i] = ranges[interval * int(i-self.input_depth_n/2.0)]/self.range_max
+                if ranges[interval * int(i-self.input_depth_n/2.0)] == data.range_min:
+                    range_ = ranges[interval * int(i-self.input_depth_n/2.0)+1]
+                else:
+                    range_ = ranges[interval * int(i-self.input_depth_n/2.0)]
+
+
+            self.input_data[i] = range_/self.range_max
 
     def callback_odom(self, data):
         odom_x = data.pose.pose.position.x
