@@ -88,7 +88,7 @@ class input_publisher():
 
     def callback_yolo(self, data):
         if self.yolo_switch and self.human_detection:
-            human_data = np.array([self.range_max]*self.input_depth_n)
+            human_data = np.array([1.0]*self.input_depth_n)
             for box in data.bounding_boxes:
                 box_xmin = float(box.xmin)
                 box_xmax = float(box.xmax)
